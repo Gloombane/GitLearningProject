@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Book</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 400px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      text-decoration: none;
+      color: #888;
+    }
+
+    .back-link:hover {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Add New Book</h2>
+  <form id="addBookForm" onsubmit="addBook(event)">
+    <label for="bookName">Book Title:</label>
+    <input type="text" id="bookName" name="bookName" required>
+
+    <label for="bookImage">Book Image URL:</label>
+    <input type="text" id="bookImage" name="bookImage" placeholder="https://example.com/image.jpg">
+
+    <label for="authorName">Author:</label>
+    <input type="text" id="authorName" name="authorName" required>
+
+    <label for="releaseDate">Release Date:</label>
+    <input type="date" id="releaseDate" name="releaseDate" required>
+
+    <button type="submit">Add Book</button>
+  </form>
+
+  <a th:href="@{/books}" class="back-link">← Back to book list</a>
+</div>
+
+<script th:src="@{/js/book.js}"></script>
+
+</body>
+</html>
+
+
+
