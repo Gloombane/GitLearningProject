@@ -1,11 +1,10 @@
 package com.example.gitlearningprojectwithspringandreact.controllers;
 
 import com.example.gitlearningprojectwithspringandreact.entities.Book;
+import com.example.gitlearningprojectwithspringandreact.entities.BookCreateDTO;
 import com.example.gitlearningprojectwithspringandreact.services.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,18 +29,22 @@ public class BookController {
     }
 
     // Добавить новую книгу
-    @PostMapping("/add")
-    public ResponseEntity<Void> addBook(@RequestBody Book book) {
-        bookService.saveBook(book);
+    @PostMapping("/addBook")
+    public ResponseEntity<Void> addBook(@RequestBody BookCreateDTO request) {
+        bookService.saveBook(request);
         return ResponseEntity.ok().build();
     }
 
+
     // Обновить книгу
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestBody Book updatedBook) {
+    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id,
+                                           @RequestBody BookCreateDTO updatedBook) {
         bookService.updateBook(id, updatedBook);
         return ResponseEntity.ok().build();
     }
+
+
 
     // Удалить книгу
     @DeleteMapping("/delete/{id}")
@@ -49,6 +52,7 @@ public class BookController {
         bookService.deleteBookById(id);
         return ResponseEntity.ok().build();
     }
+
 
 
 

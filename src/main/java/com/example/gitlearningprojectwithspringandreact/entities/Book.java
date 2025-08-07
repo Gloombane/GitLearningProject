@@ -1,21 +1,22 @@
 package com.example.gitlearningprojectwithspringandreact.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+@Entity
+@Table(name = "books")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
-
-@Entity
-@Table(name = "books")
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
@@ -34,7 +35,15 @@ public class Book {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private BookCategory bookCategory;
+
 }
+
+
+
 
 
 
