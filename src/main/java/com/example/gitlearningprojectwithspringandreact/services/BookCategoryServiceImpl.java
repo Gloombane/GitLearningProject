@@ -20,20 +20,19 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     private final BookCategoryRepository bookCategoryRepository;
 
     @Override
-    public boolean createCategory(CategoryDTO categoryDTO) {
+    public BookCategory createCategory(CategoryDTO categoryDTO) {
         Optional<BookCategory> existingCategory =
                 bookCategoryRepository.findByGenreIgnoreCase(categoryDTO.getGenre());
 
         if (existingCategory.isPresent()) {
-            return false;
+            throw new RuntimeException("Категория с таким жанром уже существует");
         }
 
         BookCategory category = BookCategory.builder()
                 .genre(categoryDTO.getGenre())
                 .build();
 
-        bookCategoryRepository.save(category);
-        return true;
+        return bookCategoryRepository.save(category);
     }
 
 
@@ -66,5 +65,8 @@ public class BookCategoryServiceImpl implements BookCategoryService {
                 .orElseThrow(() -> new RuntimeException("Категория не найдена с id: " + id));
     }
 
-
+    @Override
+    public Optional<BookCategory> findByGenreIgnoreCase(String genre) {
+        return bookCategoryRepository.findByGenreIgnoreCase(genre);
+    }
 }

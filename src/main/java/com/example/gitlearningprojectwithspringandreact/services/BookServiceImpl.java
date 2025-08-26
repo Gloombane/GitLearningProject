@@ -36,6 +36,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void saveBook(BookCreateDTO request) {
+        if (request.getReleaseDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Дата выпуска не может быть в будущем");
+        }
+
         BookCategory category = bookCategoryRepository.findById(Math.toIntExact(request.getCategoryId()))
                 .orElseThrow(() -> new RuntimeException("Категория не найдена"));
 
@@ -49,6 +53,7 @@ public class BookServiceImpl implements BookService {
 
         bookRepository.save(book);
     }
+
 
 
     // Обновить существующую книгу
@@ -68,7 +73,7 @@ public class BookServiceImpl implements BookService {
         existingBook.setAuthorName(updatedBook.getAuthorName());
         existingBook.setReleaseDate(updatedBook.getReleaseDate());
         existingBook.setBookImage(updatedBook.getBookImage());
-        existingBook.setBookCategory(category); // ❗Обновляем категорию
+        existingBook.setBookCategory(category);
 
         bookRepository.save(existingBook);
     }
@@ -78,5 +83,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Book> getBooksByCategory(Long genreId) {
+        return bookRepository.findByCategoryId(genreId);
     }
 }

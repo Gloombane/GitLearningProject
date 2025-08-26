@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
@@ -16,10 +16,17 @@ public class BookController {
     @Autowired
     private BookServiceImpl bookService;
 
-    @GetMapping("/get-all-books")
-    public List<Book> getAllBooks() {
+    @GetMapping
+    public List<Book> getBooksByFilter(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long genreId
+    ) {
+        if (genreId != null) {
+            return bookService.getBooksByCategory((long) genreId.intValue());
+        }
         return bookService.getAllBooks();
     }
+
 
     // Получить книгу по ID
     @GetMapping("/{id}")
@@ -52,7 +59,6 @@ public class BookController {
         bookService.deleteBookById(id);
         return ResponseEntity.ok().build();
     }
-
 
 
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -43,16 +43,22 @@ public class BookCategoryController {
     // 🔹 Добавить новую категорию
     @PostMapping("/add-category")
     public ResponseEntity<?> addCategory(@RequestBody CategoryDTO categoryDTO) {
-        boolean created = bookCategoryService.createCategory(categoryDTO);
+        Optional<BookCategory> existingCategory =
+                bookCategoryService.findByGenreIgnoreCase(categoryDTO.getGenre());
 
-        if (!created) {
+        if (existingCategory.isPresent()) {
             return ResponseEntity
                     .badRequest()
                     .body(Map.of("message", "Категория с таким жанром уже существует"));
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        BookCategory createdCategory = bookCategoryService.createCategory(categoryDTO);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdCategory);
     }
+
 
 
 
