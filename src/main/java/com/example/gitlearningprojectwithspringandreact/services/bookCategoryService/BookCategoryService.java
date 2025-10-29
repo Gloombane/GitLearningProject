@@ -1,4 +1,4 @@
-package com.example.gitlearningprojectwithspringandreact.services;
+package com.example.gitlearningprojectwithspringandreact.services.bookCategoryService;
 
 import com.example.gitlearningprojectwithspringandreact.entities.BookCategory;
 import com.example.gitlearningprojectwithspringandreact.entities.CategoryDTO;

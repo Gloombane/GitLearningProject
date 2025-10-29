@@ -1,4 +1,4 @@
-package com.example.gitlearningprojectwithspringandreact.repositories;
+package com.example.gitlearningprojectwithspringandreact.repositories.bookRepository;
 
 import com.example.gitlearningprojectwithspringandreact.entities.Book;
 

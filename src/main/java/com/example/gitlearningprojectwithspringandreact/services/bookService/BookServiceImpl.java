@@ -1,11 +1,14 @@
-package com.example.gitlearningprojectwithspringandreact.services;
+package com.example.gitlearningprojectwithspringandreact.services.bookService;
 
 import com.example.gitlearningprojectwithspringandreact.entities.Book;
 import com.example.gitlearningprojectwithspringandreact.entities.BookCategory;
 import com.example.gitlearningprojectwithspringandreact.entities.BookCreateDTO;
-import com.example.gitlearningprojectwithspringandreact.repositories.BookCategoryRepository;
+import com.example.gitlearningprojectwithspringandreact.entities.Stock;
+import com.example.gitlearningprojectwithspringandreact.repositories.BorrowedBookRepository;
+import com.example.gitlearningprojectwithspringandreact.repositories.bookCategoryRepository.BookCategoryRepository;
+import com.example.gitlearningprojectwithspringandreact.services.bookService.BookService;
 import org.springframework.stereotype.Service;
-import com.example.gitlearningprojectwithspringandreact.repositories.BookRepository;
+import com.example.gitlearningprojectwithspringandreact.repositories.bookRepository.BookRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,10 +17,12 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookCategoryRepository bookCategoryRepository;
+    private final BorrowedBookRepository borrowedBookRepository;
 
-    public BookServiceImpl(BookRepository bookRepository, BookCategoryRepository bookCategoryRepository) {
+    public BookServiceImpl(BookRepository bookRepository, BookCategoryRepository bookCategoryRepository, BorrowedBookRepository borrowedBookRepository) {
         this.bookRepository = bookRepository;
         this.bookCategoryRepository = bookCategoryRepository;
+        this.borrowedBookRepository = borrowedBookRepository;
     }
 
 
@@ -51,12 +56,22 @@ public class BookServiceImpl implements BookService {
                 .bookCategory(category)
                 .build();
 
-        bookRepository.save(book);
+        // Сохраняем книгу без стока
+        Book savedBook = bookRepository.save(book);
+
+        // Создаём сток для книги
+        Stock stock = Stock.builder()
+                .book(savedBook)
+                .quantity(request.getQuantity()) // ✅ берём из DTO
+                .build();
+
+        savedBook.setStock(stock);
+
+        bookRepository.save(savedBook); // повторно сохраняем с привязкой стока
     }
 
 
 
-    // Обновить существующую книгу
     @Override
     public void updateBook(Long id, BookCreateDTO updatedBook) {
         Book existingBook = bookRepository.findById(id)
@@ -75,18 +90,41 @@ public class BookServiceImpl implements BookService {
         existingBook.setBookImage(updatedBook.getBookImage());
         existingBook.setBookCategory(category);
 
+        // 🔹 Обновление количества в стоке
+        if (updatedBook.getQuantity() != null) {
+            Stock stock = existingBook.getStock();
+            if (stock == null) {
+                stock = Stock.builder()
+                        .book(existingBook)
+                        .quantity(updatedBook.getQuantity())
+                        .build();
+                existingBook.setStock(stock);
+            } else {
+                stock.setQuantity(updatedBook.getQuantity());
+            }
+        }
+
         bookRepository.save(existingBook);
     }
 
 
-    // Удалить книгу
     @Override
     public void deleteBookById(Long id) {
-        bookRepository.deleteById(id);
+        Book existingBook = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Книга не найдена с id: " + id));
+
+        // 🔹 Проверяем, взята ли книга пользователем
+        if (borrowedBookRepository.existsByBook(existingBook)) {
+            throw new IllegalStateException("Эта книга не может быть удалена, пока она взята пользователем.");
+        }
+
+        bookRepository.delete(existingBook);
     }
+
 
     @Override
     public List<Book> getBooksByCategory(Long genreId) {
         return bookRepository.findByCategoryId(genreId);
     }
+
 }

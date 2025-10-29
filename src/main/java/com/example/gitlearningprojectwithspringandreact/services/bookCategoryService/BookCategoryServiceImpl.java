@@ -1,9 +1,10 @@
-package com.example.gitlearningprojectwithspringandreact.services;
+package com.example.gitlearningprojectwithspringandreact.services.bookCategoryService;
 
 
 import com.example.gitlearningprojectwithspringandreact.entities.BookCategory;
 import com.example.gitlearningprojectwithspringandreact.entities.CategoryDTO;
-import com.example.gitlearningprojectwithspringandreact.repositories.BookCategoryRepository;
+import com.example.gitlearningprojectwithspringandreact.repositories.bookCategoryRepository.BookCategoryRepository;
+import com.example.gitlearningprojectwithspringandreact.services.bookCategoryService.BookCategoryService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package com.example.gitlearningprojectwithspringandreact.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,11 +37,16 @@ public class Book {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     private BookCategory bookCategory;
 
+    @OneToOne(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Stock stock;
+
+
 }
+
 
 
 

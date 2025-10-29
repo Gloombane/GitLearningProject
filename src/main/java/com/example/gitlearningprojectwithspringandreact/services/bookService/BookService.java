@@ -1,4 +1,4 @@
-package com.example.gitlearningprojectwithspringandreact.services;
+package com.example.gitlearningprojectwithspringandreact.services.bookService;
 
 import com.example.gitlearningprojectwithspringandreact.entities.Book;
 import com.example.gitlearningprojectwithspringandreact.entities.BookCreateDTO;
@@ -12,4 +12,5 @@ public interface BookService {
     void updateBook(Long id, BookCreateDTO updatedBook);
     void deleteBookById(Long id);
     List<Book> getBooksByCategory(Long genreId);
+
 }

@@ -2,7 +2,7 @@ package com.example.gitlearningprojectwithspringandreact.controllers;
 
 import com.example.gitlearningprojectwithspringandreact.entities.BookCategory;
 import com.example.gitlearningprojectwithspringandreact.entities.CategoryDTO;
-import com.example.gitlearningprojectwithspringandreact.services.BookCategoryServiceImpl;
+import com.example.gitlearningprojectwithspringandreact.services.bookCategoryService.BookCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000",
+        allowCredentials = "true")
 @RestController
 @RequestMapping("/api/categories")
 public class BookCategoryController {
